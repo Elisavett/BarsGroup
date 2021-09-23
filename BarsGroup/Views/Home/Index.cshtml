@@ -1,0 +1,46 @@
+﻿@model IEnumerable<GroupExtended>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Учебные группы</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentsCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Teacher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentsCount)
+                </td>
+                <td>
+                    <a asp-action="EditGroup" asp-route-id="@item.Id">Редактировать</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="CreateGroup" class="btn">Создать учебную группу</a>
+</p>
