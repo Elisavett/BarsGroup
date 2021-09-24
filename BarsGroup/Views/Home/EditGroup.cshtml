@@ -5,59 +5,74 @@
 }
 
 <h1>Редактировать учебную группу</h1>
-
+@Html.ActionLink("Учебные группы", "Index", "Home") > @Html.ActionLink("Редактировать учебную группу", "EditGroup", "Home", new { id = Model.Id }, null)
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditGroup">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+        <form action="EditGroup" method="post">
+            @Html.HiddenFor(model => model.Id)
             <div class="form-group">
-                <label asp-for="TeacherId" class="control-label">@Model.Teacher.FullName</label>
-                <input asp-for="TeacherId" type="hidden" />
+                <div class="col-md-12">
+                    @Html.LabelFor(model => model.TeacherId, htmlAttributes: new { @class = "control-label" }):
+                    <b>@Html.ValueFor(model => model.Teacher.FullName)</b>
+                    @Html.HiddenFor(model => model.TeacherId)
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <div class="col-md-12">
+                    @Html.LabelFor(model => model.CourseId, htmlAttributes: new { @class = "control-label" }):
+                    <b>@Html.ValueFor(model => model.Course.Name)</b>
+                    @Html.HiddenFor(model => model.CourseId)
+                </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить изменения" class="btn btn-primary" />
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-10" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Сохранить изменения" class="btn btn-primary" />
+                </div>
             </div>
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Студенты
-                    </th>
-                    <th>
-                        Организация
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Students)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Organization.Name)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Удалить из группы</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <button>Добавить студента</button>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<div class="col-md-10">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Студенты
+                </th>
+                <th>
+                    Организация
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Employees)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Organization.Name)
+                    </td>
+                    <td>
+                        <form action="/Home/DeleteStudentFromGroup" method="post">
+                            <input type="hidden" value="@item.Id" name="StudentId" />
+                            <input type="hidden" value="@Model.Id" name="GroupId" />
+                            <input type="submit" class="btn btn-link" value="Удалить из группы" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a href="/Home/AddStudentToGroup/@Model.Id" class="btn btn-primary">Добавить студента</a>
+</div>

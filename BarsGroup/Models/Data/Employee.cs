@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BarsGroup.Models
 {
-    public class Student
+    public class Employee
     {
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

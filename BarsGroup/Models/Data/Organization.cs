@@ -22,7 +22,7 @@ namespace BarsGroup.Models
         public int TeacherId { get; set; }
         [Display(Name = "Преподаватель")]
         public Teacher Teacher { get; set; }
-        [Display(Name = "Студенты")]
-        public List<Student> Students { get; set; } = new List<Student>();
+        [Display(Name = "Сотрудники")]
+        public List<Employee> Employees { get; set; } = new List<Employee>();
     }
 }

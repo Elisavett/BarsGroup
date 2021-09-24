@@ -15,16 +15,16 @@ namespace BarsGroup.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Student> Students { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Student>()
+         
+            modelBuilder.Entity<Employee>()
                 .HasOne(s => s.Organization)
-                .WithMany(o => o.Students)
+                .WithMany(o => o.Employees)
                 .HasForeignKey(s => s.OrganizationId)
                 .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<Organization>()
@@ -65,39 +65,26 @@ namespace BarsGroup.Models
                 new Organization { Id = ++id, Inn = 1234567891, Name = "РЖД", TeacherId = 1 },
                 new Organization { Id = ++id, Inn = 9876543211, Name = "Аэрофлот", TeacherId = 1 },
                 new Organization { Id = ++id, Inn = 1230067001, Name = "ABtest", TeacherId = 2 },
-                new Organization { Id = ++id, Inn = 1000067891, Name = "Технологика", TeacherId = 3 },
-                new Organization { Id = ++id, Inn = 1234500000, Name = "1С", TeacherId = 4 },
-                new Organization { Id = ++id, Inn = 9992267891, Name = "Лукойл", TeacherId = 5 },
-                new Organization { Id = ++id, Inn = 1230099112, Name = "Газпром", TeacherId = 5 }
+                new Organization { Id = ++id, Inn = 1000067891, Name = "Технологика", TeacherId = 2 },
+                new Organization { Id = ++id, Inn = 1234500000, Name = "1С", TeacherId = 2 },
+                new Organization { Id = ++id, Inn = 9992267891, Name = "Лукойл", TeacherId = 3 },
+                new Organization { Id = ++id, Inn = 1230099112, Name = "Газпром", TeacherId = 4 },
+                new Organization { Id = ++id, Inn = 9992267891, Name = "АСУ ТП", TeacherId = 5 }
              );
             id = 0;
-            List<Student> students1 = new List<Student>()
-            {
-                new Student { Id = ++id, FullName = "Макарова Т. И.", OrganizationId = 1 },
-               new Student { Id = ++id, FullName = "Орликова П. А.", OrganizationId = 2 },
-               new Student { Id = ++id, FullName = "Мирошниченко Т. В.", OrganizationId = 3 }
-            };
-            List<Student> students2 = new List<Student>()
-            {
-                 new Student { Id = ++id, FullName = "Маликов Д. В.", OrganizationId = 4 },
-               new Student { Id = ++id, FullName = "Карпов П. П.", OrganizationId = 5 }
-            };
-            List<Student> students3 = new List<Student>()
-            {
-                new Student { Id = ++id, FullName = "Русскин К. С.", OrganizationId = 3 },
-               new Student { Id = ++id, FullName = "Зуев П. А.", OrganizationId = 6 },
-               new Student { Id = ++id, FullName = "Шилов Е. С.", OrganizationId = 2 }
-            };
-            id = 0;
-            modelBuilder.Entity<Student>().HasData(
-               new Student { Id = ++id, FullName = "Макарова Т. И.", OrganizationId = 1 },
-               new Student { Id = ++id, FullName = "Орликова П. А.", OrganizationId = 2 },
-               new Student { Id = ++id, FullName = "Мирошниченко Т. В.", OrganizationId = 2 },
-               new Student { Id = ++id, FullName = "Маликов Д. В.", OrganizationId = 3 },
-               new Student { Id = ++id, FullName = "Карпов П. П.", OrganizationId = 3 },
-               new Student { Id = ++id, FullName = "Русскин К. С.", OrganizationId = 3 },
-               new Student { Id = ++id, FullName = "Зуев П. А.", OrganizationId = 4 },
-               new Student { Id = ++id, FullName = "Шилов Е. С.", OrganizationId = 4 }
+            modelBuilder.Entity<Employee>().HasData(
+               new Employee { Id = ++id, FullName = "Макарова Т. И.", OrganizationId = 1 },
+               new Employee { Id = ++id, FullName = "Орликова П. А.", OrganizationId = 2 },
+               new Employee { Id = ++id, FullName = "Мирошниченко Т. В.", OrganizationId = 2 },
+               new Employee { Id = ++id, FullName = "Маликов Д. В.", OrganizationId = 3 },
+               new Employee { Id = ++id, FullName = "Карпов П. П.", OrganizationId = 3 },
+               new Employee { Id = ++id, FullName = "Русскин К. С.", OrganizationId = 3 },
+               new Employee { Id = ++id, FullName = "Зуев П. А.", OrganizationId = 4 },
+               new Employee { Id = ++id, FullName = "Шилов Е. С.", OrganizationId = 4 },
+               new Employee { Id = ++id, FullName = "Семенов Д. В.", OrganizationId = 5 },
+               new Employee { Id = ++id, FullName = "Дудкина П. П.", OrganizationId = 6 },
+               new Employee { Id = ++id, FullName = "Репин К. С.", OrganizationId = 6 },
+               new Employee { Id = ++id, FullName = "Комков П. А.", OrganizationId = 7 }
             );
             id = 0;
             modelBuilder.Entity<Group>().HasData(
@@ -107,24 +94,24 @@ namespace BarsGroup.Models
             );
 
             modelBuilder.Entity<Group>()
-                .HasMany(s => s.Students)
-                .WithMany(g => g.Groups)
+                .HasMany(g => g.Employees)
+                .WithMany(s => s.Groups)
                 .UsingEntity<Dictionary<string, object>>(
-                    "StudentGroup",
-                    r => r.HasOne<Student>().WithMany().HasForeignKey("StudentId"),
+                    "EmployeeGroup",
+                    r => r.HasOne<Employee>().WithMany().HasForeignKey("EmployeeId"),
                     l => l.HasOne<Group>().WithMany().HasForeignKey("GroupId"),
                     je =>
                     {
-                        je.HasKey("StudentId", "GroupId");
+                        je.HasKey("EmployeeId", "GroupId");
                         je.HasData(
-                            new { StudentId = 1, GroupId = 1 },
-                            new { StudentId = 2, GroupId = 1 },
-                            new { StudentId = 3, GroupId = 1 },
-                            new { StudentId = 4, GroupId = 2 },
-                            new { StudentId = 5, GroupId = 2 },
-                            new { StudentId = 6, GroupId = 3 },
-                            new { StudentId = 7, GroupId = 3 },
-                            new { StudentId = 8, GroupId = 3 }
+                            new { EmployeeId = 1, GroupId = 1 },
+                            new { EmployeeId = 2, GroupId = 1 },
+                            new { EmployeeId = 3, GroupId = 1 },
+                            new { EmployeeId = 4, GroupId = 2 },
+                            new { EmployeeId = 5, GroupId = 2 },
+                            new { EmployeeId = 6, GroupId = 3 },
+                            new { EmployeeId = 7, GroupId = 3 },
+                            new { EmployeeId = 8, GroupId = 3 }
                          );
                     });
 

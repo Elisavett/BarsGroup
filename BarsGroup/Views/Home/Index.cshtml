@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<GroupExtended>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
 <h1>Учебные группы</h1>
-<table class="table">
+
+@Html.ActionLink("Учебные группы", "Index", "Home")
+
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>
@@ -34,7 +33,7 @@
                     @Html.DisplayFor(modelItem => item.StudentsCount)
                 </td>
                 <td>
-                    <a asp-action="EditGroup" asp-route-id="@item.Id">Редактировать</a>
+                    @Html.ActionLink("Редактировать", "EditGroup", "Home", new { id = item.Id }, null)
                 </td>
             </tr>
         }
@@ -42,5 +41,5 @@
 </table>
 
 <p>
-    <a asp-action="CreateGroup" class="btn">Создать учебную группу</a>
+    <a href="/Home/CreateGroup" class="btn btn-primary">Создать учебную группу</a>
 </p>

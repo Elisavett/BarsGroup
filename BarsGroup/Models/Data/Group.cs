@@ -14,10 +14,10 @@ namespace BarsGroup.Models
         public int Id { get; set; }
         [Required]
         [StringLength(200)]
-        [Display(Name = "Название")]
+        [Display(Name = "Название учебной группы")]
         public string Name { get; set; }
         [Display(Name = "Студенты")]
-        public List<Student> Students { get; set; } = new List<Student>();
+        public List<Employee> Employees { get; set; } = new List<Employee>();
         [Display(Name = "Преподаватель")]
         public int TeacherId { get; set; }
         [Display(Name = "Преподаватель")]
